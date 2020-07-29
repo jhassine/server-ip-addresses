@@ -1,0 +1,7 @@
+version: "3.8"
+services:
+  app:
+    build: .
+    volumes:
+      - ./generate-csv.sh:/app/generate-csv.sh:ro
+      - ./data:/data
