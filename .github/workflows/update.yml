@@ -4,15 +4,16 @@ on:
   schedule:
     - cron: "*/5 * * * *"
 
-  jobs:
-    release:
-      runs-on: ubuntu-20.04
-      steps:
-        - name: Checkout
-          uses: actions/checkout@v2
-        - name: Update CIDRs
-          run: docker-compose run --rm app
-        - name: Push updates
-            git add data/datacenters.csv
-            git commit -m "commit message"
-            git push
+jobs:
+  update:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Update CIDRs
+        run: docker-compose run --rm app
+      - name: Push updates
+        run: |
+          git add data/datacenters.csv
+          git commit -m "commit message"
+          git push
