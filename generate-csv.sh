@@ -3,6 +3,7 @@
 set -euxo pipefail
 
 CIDR_REGEX='[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\/[0-9]\{1,\}'
+IP_ADDRESS_REGEX='([0-9]{1,3}[\.]){3}[0-9]{1,3}'
 
 cd /data
 
@@ -16,8 +17,13 @@ wget -qO- $(wget -qO- -U Mozilla https://www.microsoft.com/en-us/download/confir
 
 cat datacenters.txt | sort -V > datacenters.txt
 
-echo '"cidr"' > datacenters.csv
+echo '"cidr","hostmin","hostmax"' > datacenters.csv
 
-cat datacenters.txt | sed 's/.*/"&"/' >> datacenters.csv
+cat datacenters.txt | while read cidr; do
+        hostmin=$(ipcalc $cidr | grep 'HostMin' | grep -E -o "$IP_ADDRESS_REGEX");
+        hostmax=$(ipcalc $cidr | grep 'HostMax' | grep -E -o "$IP_ADDRESS_REGEX");
+        echo "\"$cidr\",\"$hostmin\",\"$hostmax\"" >> datacenters.csv;
+    done
+cat datacenters.txt | while read cidr; do echo "\"$cidr\"" >> datacenters.csv; done
 
 echo "Success!"
