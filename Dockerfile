@@ -1,6 +1,6 @@
 FROM alpine:3.12
 
-RUN apk add --no-cache jq
+RUN apk add --no-cache jq ipcalc
 
 COPY generate-csv.sh .
 
