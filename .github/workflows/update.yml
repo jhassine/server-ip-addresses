@@ -15,8 +15,12 @@ jobs:
         run: docker-compose run --rm app
       - name: Push updates
         run: |
-          git config --global user.email "action@github.com"
-          git config --global user.name "Update Bot"
-          git add data
-          git commit -m "commit message"
-          git push
+          if [ -n "$(git status --porcelain)" ]; then
+            git config --global user.email "action@github.com"
+            git config --global user.name "Update Bot"
+            git add data
+            git commit -m "Updated CIDRs on $(date -Iminutes)"
+            git push;
+          else
+            echo "no changes";
+          fi

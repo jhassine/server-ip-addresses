@@ -1,0 +1,3 @@
+# Data center IP ranges / CIDRs
+
+image::https://github.com/jhassine/datacenters/workflows/Update%20CIDRs/badge.svg?branch=master[Status]
