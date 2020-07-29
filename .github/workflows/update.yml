@@ -3,6 +3,7 @@ name: Update CIDRs
 on:
   schedule:
     - cron: "*/5 * * * *"
+  workflow_dispatch:
 
 jobs:
   update:
@@ -16,6 +17,6 @@ jobs:
         run: |
           git config --global user.email "action@github.com"
           git config --global user.name "Update Bot"
-          git add data/datacenters.csv
+          git add data
           git commit -m "commit message"
           git push
