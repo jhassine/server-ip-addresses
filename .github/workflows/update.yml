@@ -1,4 +1,4 @@
-Name: Update CIDRs
+name: Update CIDRs
 
 on:
   schedule:
