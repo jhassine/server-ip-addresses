@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Build docker
+        run: docker-compose build app
       - name: Update CIDRs
         run: docker-compose run --rm app
       - name: Push updates

@@ -1,29 +1,46 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
-set -euxo pipefail
+set -euo pipefail
 
 CIDR_REGEX='[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\/[0-9]\{1,\}'
 IP_ADDRESS_REGEX='([0-9]{1,3}[\.]){3}[0-9]{1,3}'
 
 cd /data
 
-wget -qO- https://ip-ranges.amazonaws.com/ip-ranges.json | grep -o "$CIDR_REGEX" > datacenters.txt
+cidrs_aws=$(wget -qO- https://ip-ranges.amazonaws.com/ip-ranges.json | grep -o "$CIDR_REGEX" | sort -V)
+echo -n "AWS CIDRs: "
+echo "$cidrs_aws" | wc -l
 
-wget -qO- https://www.cloudflare.com/ips-v4 >> datacenters.txt
+cidrs_cloudflare=$(wget -qO- https://www.cloudflare.com/ips-v4 | sort -V)
+echo -n "CloudFlare CIDRs: "
+echo "$cidrs_cloudflare" | wc -l
 
-wget -qO- https://www.gstatic.com/ipranges/cloud.json | grep -o "$CIDR_REGEX" >> datacenters.txt
+cidrs_gcp=$(wget -qO- https://www.gstatic.com/ipranges/cloud.json | grep -o "$CIDR_REGEX" | sort -V)
+echo -n "GCP CIDRs: "
+echo "$cidrs_gcp" | wc -l
 
-wget -qO- $(wget -qO- -U Mozilla https://www.microsoft.com/en-us/download/confirmation.aspx?id=56519 | grep -Eo 'https://download.microsoft.com/download/\S+?\.json' | head -n 1) | grep -o "$CIDR_REGEX" >> datacenters.txt
+cidrs_azure=$(wget -qO- $(wget -qO- -U Mozilla https://www.microsoft.com/en-us/download/confirmation.aspx?id=56519 | grep -Eo 'https://download.microsoft.com/download/\S+?\.json' | head -n 1) | grep -o "$CIDR_REGEX" | sort -V)
+echo -n "Azure CIDRs: "
+echo "$cidrs_azure" | wc -l
 
-cat datacenters.txt | sort -V > datacenters.txt
+echo -e "$cidrs_aws\n$cidrs_cloudflare\n$cidrs_gcp\n$cidrs_azure\n" > datacenters.txt
 
-echo '"cidr","hostmin","hostmax"' > datacenters.csv
-
-cat datacenters.txt | while read cidr; do
-        hostmin=$(ipcalc $cidr | grep 'HostMin' | grep -E -o "$IP_ADDRESS_REGEX");
-        hostmax=$(ipcalc $cidr | grep 'HostMax' | grep -E -o "$IP_ADDRESS_REGEX");
-        echo "\"$cidr\",\"$hostmin\",\"$hostmax\"" >> datacenters.csv;
+get_csv_of_low_and_high_ip_from_cidr_list()
+{
+    cidrs=$1
+    vendor=$2
+    echo "$cidrs" | while read cidr;
+    do
+        hostmin=$(ipcalc -n $cidr |cut -f2 -d=)
+        hostmax=$(ipcalc -b $cidr |cut -f2 -d=)
+        echo "\"$cidr\",\"$hostmin\",\"$hostmax\",\"$vendor\""
     done
-cat datacenters.txt | while read cidr; do echo "\"$cidr\"" >> datacenters.csv; done
+}
+
+echo '"cidr","hostmin","hostmax","vendor"' > datacenters.csv
+get_csv_of_low_and_high_ip_from_cidr_list "$cidrs_aws" "AWS" >> datacenters.csv
+get_csv_of_low_and_high_ip_from_cidr_list "$cidrs_cloudflare" "CloudFlare" >> datacenters.csv
+get_csv_of_low_and_high_ip_from_cidr_list "$cidrs_gcp" "GCP" >> datacenters.csv
+get_csv_of_low_and_high_ip_from_cidr_list "$cidrs_azure" "Azure" >> datacenters.csv
 
 echo "Success!"
