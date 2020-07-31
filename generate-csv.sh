@@ -19,11 +19,11 @@ cidrs_gcp=$(wget -qO- https://www.gstatic.com/ipranges/cloud.json | grep -o "$CI
 echo -n "GCP CIDRs: "
 echo "$cidrs_gcp" | wc -l
 
-cidrs_azure=$(wget -qO- $(wget -qO- -U Mozilla https://www.microsoft.com/en-us/download/confirmation.aspx?id=56519 | grep -Eo 'https://download.microsoft.com/download/\S+?\.json' | head -n 1) | grep -o "$CIDR_REGEX" | sort -V)
+cidrs_azure=$(wget -qO- $(wget -qO- -U Mozilla https://www.microsoft.com/en-us/download/confirmation.aspx?id=56519 | grep -Eo 'https://download.microsoft.com/download/\S+?\.json' | head -n 1) | grep -o "$CIDR_REGEX" | sort -V )
 echo -n "Azure CIDRs: "
 echo "$cidrs_azure" | wc -l
 
-echo -e "$cidrs_aws\n$cidrs_cloudflare\n$cidrs_gcp\n$cidrs_azure\n" > datacenters.txt
+echo -e "$cidrs_aws\n$cidrs_cloudflare\n$cidrs_gcp\n$cidrs_azure\n" | uniq > datacenters.txt
 
 get_csv_of_low_and_high_ip_from_cidr_list()
 {
@@ -38,9 +38,9 @@ get_csv_of_low_and_high_ip_from_cidr_list()
 }
 
 echo '"cidr","hostmin","hostmax","vendor"' > datacenters.csv
-get_csv_of_low_and_high_ip_from_cidr_list "$cidrs_aws" "AWS" >> datacenters.csv
-get_csv_of_low_and_high_ip_from_cidr_list "$cidrs_cloudflare" "CloudFlare" >> datacenters.csv
-get_csv_of_low_and_high_ip_from_cidr_list "$cidrs_gcp" "GCP" >> datacenters.csv
-get_csv_of_low_and_high_ip_from_cidr_list "$cidrs_azure" "Azure" >> datacenters.csv
+get_csv_of_low_and_high_ip_from_cidr_list "$cidrs_aws" "AWS" | uniq >> datacenters.csv
+get_csv_of_low_and_high_ip_from_cidr_list "$cidrs_cloudflare" "CloudFlare" | uniq  >> datacenters.csv
+get_csv_of_low_and_high_ip_from_cidr_list "$cidrs_gcp" "GCP" | uniq >> datacenters.csv
+get_csv_of_low_and_high_ip_from_cidr_list "$cidrs_azure" "Azure" | uniq >> datacenters.csv
 
 echo "Success!"
