@@ -1,3 +1,22 @@
 # Data center IP ranges / CIDRs
 
 image::https://github.com/jhassine/datacenters/workflows/Update%20CIDRs/badge.svg?branch=master[Status]
+
+Daily updated list of IP addresses / CIDR blocks used by data centers, cloud service providers, servers, etc.
+
+Essentially the IP addresses where an average web user should not be accessing from. Useful for detecting or limiting the traffic from servers.
+
+## Usage
+
+There are two formats of the data available which are updated daily:
+
+1. The CSV format which contain more details: https://raw.githubusercontent.com/jhassine/datacenters/master/data/datacenters.csv
+
+2. The text format which contain only the CIDR block: https://github.com/jhassine/datacenters/blob/master/data/datacenters.txt
+
+## Contributions are welcomed
+
+If you want to contribute to add more known server IP addresses, please send a pull request.
+
+Some hints might be gathered here:
+https://securitytrails.com/blog/identify-ip-ranges-company-owns
