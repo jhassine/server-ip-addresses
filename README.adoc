@@ -10,9 +10,9 @@ Essentially the IP addresses where an average web user should not be accessing f
 
 There are two formats of the data available which are updated daily:
 
-1. The CSV format which contain more details: https://raw.githubusercontent.com/jhassine/datacenters/master/data/datacenters.csv
+1. The CSV format which contain more details: https://raw.githubusercontent.com/jhassine/server-ip-addresses/master/data/datacenters.csv
 
-2. The text format which contain only the CIDR block: https://raw.githubusercontent.com/jhassine/datacenters/master/data/datacenters.txt
+2. The text format which contain only the CIDR block: https://raw.githubusercontent.com/jhassine/server-ip-addresses/master/data/datacenters.txt
 
 ## Currently included
 
