@@ -1,4 +1,4 @@
-# Data center IP ranges / CIDRs
+# Server IP address ranges / CIDR blocks
 
 image::https://github.com/jhassine/datacenters/workflows/Update%20CIDRs/badge.svg?branch=master[Status]
 
