@@ -14,6 +14,10 @@ There are two formats of the data available which are updated daily:
 
 2. The text format which contain only the CIDR block: https://github.com/jhassine/datacenters/blob/master/data/datacenters.txt
 
+## Currently included
+
+The list currenlty includes the following cloud infrastructure providers: AWS, Azure, GCP and CloudFlare.
+
 ## Contributions are welcomed
 
 If you want to contribute to add more known server IP addresses, please send a pull request.
