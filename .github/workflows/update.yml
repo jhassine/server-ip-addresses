@@ -12,9 +12,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build docker
-        run: docker-compose build app
+        run: docker compose build app
       - name: Update CIDRs
-        run: docker-compose run --rm app
+        run: docker compose run --rm app
       - name: Push updates
         run: |
           if [ -n "$(git status --porcelain)" ]; then
